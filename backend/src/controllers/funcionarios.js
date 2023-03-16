@@ -1,5 +1,5 @@
 const FuncionariosModel = require('../models/funcionarios')
-const db = require('../database/db')
+const moment = require('moment-timezone');
 
 async function get(req, res) {
   const { id } = req.params
@@ -11,6 +11,9 @@ async function get(req, res) {
 }
 
 async function post(req, res) {
+
+  let formattedCreatedAt;
+  
   const {
     name,
     document,
@@ -21,14 +24,22 @@ async function post(req, res) {
     created_at,
   } = req.body
 
+  const formattedBirthDate = birth_date ? moment(birth_date, 'DD/MM/YYYY').toDate() : null;
+
+  if (created_at) {
+    formattedCreatedAt = moment.tz(created_at, 'DD/MM/YYYY', 'America/Sao_Paulo').toDate();
+  } else {
+    formattedCreatedAt = moment().tz('America/Sao_Paulo').toDate();
+  }
+
   const funcionario = new FuncionariosModel({
     name,
     document,
     email,
     phone,
-    birth_date,
+    birth_date: formattedBirthDate,
     salary,
-    created_at,
+    created_at: formattedCreatedAt,
   })
 
   funcionario.save()
