@@ -15,7 +15,6 @@ function connect(){
 
   db.on('error', console.error.bind(console, 'error connection: '))
 
-
 }
 
 module.exports = {
