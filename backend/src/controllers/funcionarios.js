@@ -24,8 +24,6 @@ async function post(req, res) {
     created_at,
   } = req.body
 
-  const formattedBirthDate = birth_date ? moment(birth_date, 'DD/MM/YYYY').toDate() : null;
-
   if (created_at) {
     formattedCreatedAt = moment.tz(created_at, 'DD/MM/YYYY', 'America/Sao_Paulo').toDate();
   } else {
@@ -37,13 +35,12 @@ async function post(req, res) {
     document,
     email,
     phone,
-    birth_date: formattedBirthDate,
+    birth_date,
     salary,
     created_at: formattedCreatedAt,
   })
 
   funcionario.save()
-
   res.send({message: "save success"})
 
 }
@@ -76,8 +73,6 @@ async function del(req, res) {
 
   try {
     const funcionarios = await FuncionariosModel.findById(obj)
-
-    console.log(funcionarios)
 
     if (!funcionarios) {
       return res.status(404).send({ message: 'Employee not exist' })
